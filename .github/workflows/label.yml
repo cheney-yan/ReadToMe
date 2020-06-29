@@ -1,0 +1,25 @@
+# This workflow will triage pull requests and apply a label based on the
+# paths that are modified in the pull request.
+#
+# To use this workflow, you will need to set up a .github/labeler.yml
+# file with configuration.  For more information, see:
+# https://github.com/actions/labeler/blob/master/README.md
+
+name: Tester
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '* * * * *'
+
+jobs:
+  curl:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: secrethub/actions/env-export@v0.1.0
+      env:
+        NOTIFICATION_KEY: ${{ secrets.NOTIFICATION_KEY }}
+    - name: curl
+      uses: wei/curl@v1
+      with:
+        args: https://notify.globalview.workers.dev/?key=${NOTIFICATION_KEY}&message=hello-from-github
